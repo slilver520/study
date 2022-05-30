@@ -1,0 +1,123 @@
+/*Google IO 2022*/
+
+/* 1. color-mix 색상 혼합*/
+:root {
+    --brandColor:blue;
+}
+.box{
+    background-color: color-mix(var(--brandColor) 50%, white 10%);
+}
+.container{
+    background-color: color-mix(red 30%, blue 70%);
+}
+
+/* 2. accent-color : input, checkBox, radio buttons, range slider, progress element의 tint 색상 변경*/
+:root {
+    /*모든 색상 변경*/
+    accent-color:red;
+}
+progress {
+    /*하나의 element만 변경*/
+    accent-color:blue;
+}
+/* 3. color-contrast 색상 대비*/
+.box {
+    background-color: red;
+    color: color-contrast(red);
+    
+    color:color-contrast(red vs pink, yellow, green);
+    /* 옵션 제공 ver */
+}
+    
+/* 4. iner : html 속성, 페이지의 섹션을 고정함 (click, focus 작동x)
+    - 유저가 이미 한 번 클릭한 후 버튼 얼리고 싶으면
+    - 양식 전송 후 유저가 다른 곳을 클릭하는것을 막고싶으면
+    <form inert>
+        <input />
+        <button>save</button>
+    </form>
+*/
+
+/* 5. :has() : 부모요소에 특정 자식이 있는지 여부에 따라 부모요소의 스타일링 가능*/
+form:has(button:hover) {}
+li:has(a){}
+a:has(> img){}
+
+/* 6. viewport Units 모바일
+    lvh : largest viewport height
+    svh : smallest viewport height (navigation bar=상단에 url창, 하단에 뒤로가기/즐겨찾기 버튼) 
+    dvh : dynamic(동적) viewport height ( navigation bar 유무에 따라 달라짐)
+*/
+
+
+/* 7. @nest */
+nav {
+    & ul{
+        & li{
+
+        }
+    }
+}
+.foo {
+    color:red;
+    @nest :not(&) {
+        color: blue;
+    }
+}
+/* ===== */
+.foo {
+    color: red;
+}
+:not(.foo) {
+    color: blue;
+}
+
+/* 8. @scope : 스타일의 범위를 지정하거나 자신만의 버블로 분리 가능, 주로 dark, light 테마에 사용*/
+    @scope (header){
+        .title {
+            font-size:36px;
+        }
+        nav {
+            display: flex;
+        }
+    }
+    @scope (aside){
+        .title {
+            font-size:28px;
+        }
+        nav {
+            display: grid;
+        }
+    }
+    /* header 또는 aside 태그 안에 있는지 여부에 따라 title, nav의 스타일 적용*/
+
+
+/* 9. @container : 페이지의 넓이 뿐만 아니라 그 부모요소에 대응할 수 있음  */
+header {
+    container-type: inline-size;
+    container-name: header-container;
+}
+@contaiver header-contaiver (min-width: 600px){
+    nav {
+        display:flex;
+    }
+}
+
+/* 10. custom-media : 미디어 쿼리 변수 만들어서 재사용 가능*/
+@custom-media --darkMode (prefers-color-scheme: dark);
+@custom-media --lightMode (prefers-color-scheme: light);
+@custom-media --landscape (orientation: landscape);
+@custom-media --portrait (orientation: portrait);
+@custom-media --iPnone (max-device-width: 480px);
+/* landscape-가로모드, portrait-세로모드 */
+
+@media (--darkMode) and (--portrait) and (--iPhone) {
+    body{
+        ..;
+    }
+}
+@media (--lightMode) and (--landscape) and (--iPhone) {
+    body{
+        ..;
+    }
+}
